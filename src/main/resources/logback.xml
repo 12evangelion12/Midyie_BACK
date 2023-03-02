@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright © 2023 RICHE Tom.
+  ~ All rights reserved
+  ~
+  ~ @Author RICHE Tom
+  ~ @LastEdit 02/03/2023 19:47
+  -->
+
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

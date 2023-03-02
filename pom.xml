@@ -4,7 +4,7 @@
   ~ All rights reserved
   ~
   ~ @Author RICHE Tom
-  ~ @LastEdit 01/03/2023 21:35
+  ~ @LastEdit 02/03/2023 20:27
   -->
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -23,20 +23,41 @@
     </properties>
 
     <dependencies>
+
+        <!-- Dépendances permettant de réaliser une API REST avec des requêtes GET/POST/PUT/DELETE
+             Repo : https://mvnrepository.com/artifact/io.javalin/javalin -->
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
             <version>5.3.2</version>
         </dependency>
+        <!-- Repo : https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.3</version>
         </dependency>
+        <!-- Repo : https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.14.2</version>
+        </dependency>
+
+        <!-- Dépendance permettant de se connecter à une base de donnée
+             Repo : https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.32</version>
+        </dependency>
+
+        <!--  Dépendance de gestion des logs
+              Repo : https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.4.5</version>
         </dependency>
     </dependencies>
 

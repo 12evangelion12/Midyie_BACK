@@ -3,40 +3,32 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 01/03/2023 22:13
+ * @LastEdit 02/03/2023 20:25
  */
 
 package fr.tom.midyie.database;
+
+import fr.tom.midyie.exception.DatabaseCredentialsException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Classe de gestion de la connexion à la base de donnée
+ */
 public class DBConnector {
 
-    private final String url;
-    private final String username;
-    private final String password;
+    private final DBCredentials dbCredentials;
+
     private Connection connection;
 
-    public DBConnector(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public DBConnector() throws DatabaseCredentialsException {
+        this.dbCredentials = new DBCredentials();
     }
 
-    public void connect() throws SQLException {
-        connection = DriverManager.getConnection(url, username, password);
-    }
-
-    public void disconnect() throws SQLException {
-        if (connection != null) {
-            connection.close();
-            connection = null;
-        }
-    }
-
-    public Connection getConnection() {
+    public Connection connect() throws SQLException {
+        connection = DriverManager.getConnection(dbCredentials.getUrl(), dbCredentials.getUsername(), dbCredentials.getPassword());
         return connection;
     }
 }

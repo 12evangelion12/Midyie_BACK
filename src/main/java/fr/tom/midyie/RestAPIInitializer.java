@@ -3,51 +3,66 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 01/03/2023 22:35
+ * @LastEdit 03/03/2023 00:41
  */
 
 package fr.tom.midyie;
 
-import fr.tom.midyie.database.DBConnector;
-import fr.tom.midyie.database.DBCredentials;
-import fr.tom.midyie.exceptions.ResourceLoaderException;
-import fr.tom.midyie.routes.get.UserController;
-import fr.tom.midyie.utils.ResouceLoader;
+import fr.tom.midyie.api.AccountController;
+import fr.tom.midyie.api.ItemController;
+import fr.tom.midyie.api.PropertyController;
+import fr.tom.midyie.common.Constants;
+import fr.tom.midyie.util.PropertiesManager;
 import io.javalin.Javalin;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class RestAPIInitializer {
 
     Javalin restAPI;
+    int restAPIPort;
 
     public RestAPIInitializer() {
 
-        try {
-            ResouceLoader resouceLoader = new ResouceLoader();
-            Properties applicationProperties = new Properties();
-            applicationProperties.load(resouceLoader.load("application.properties"));
-            restAPI = Javalin.create().start(Integer.parseInt(applicationProperties.getProperty("application.restAPI.port")));
-        } catch (ResourceLoaderException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        //Initialisation de l'api javalin
+        Properties applicationProperties = PropertiesManager.loadProperties(Constants.APPLICATION_PROPERTIES_FILE);
+        restAPI = Javalin.create();
+        restAPIPort = Integer.parseInt(applicationProperties.getProperty(Constants.APPLICATION_RESTAPI_PORT_PROPERTY));
     }
 
+    /**
+     * Initialisation des différentes routes de chaque service
+     */
+    public void initRoad() {
+
+        AccountController accountController = new AccountController();
+        restAPI.get("/accounts", accountController::getAllAccounts);
+        restAPI.get("/account/{accountId}", accountController::getAccountById);
+        restAPI.post("/account", accountController::createProperty);
+        restAPI.put("/account/{accountId}", accountController::updateProperty);
+        restAPI.delete("/account/{accountId}", accountController::deleteProperty);
+
+        ItemController itemController = new ItemController();
+        restAPI.get("/items", itemController::getAllItems);
+        restAPI.get("/itemsByProperty", itemController::getItemsByProperty);
+        restAPI.get("/item", itemController::getItemById);
+        restAPI.post("/item", itemController::createItem);
+        restAPI.put("/item/{itemId}", itemController::updateItem);
+        restAPI.delete("/item", itemController::deleteItem);
+
+        PropertyController propertyController = new PropertyController();
+        restAPI.get("/property/{propertyId}", propertyController::getPropertyById);
+        restAPI.post("/property", propertyController::createAccount);
+        restAPI.put("/property/{propertyId}", propertyController::updateAccount);
+        restAPI.delete("/property/{propertyId}", propertyController::deleteProperty);
+
+
+    }
+
+    /**
+     * Démarrage de l'API REST Javalin
+     */
     public void start() {
-
-        try {
-            DBCredentials dbCredentials = new DBCredentials();
-            DBConnector dbConnector = new DBConnector(dbCredentials.getUrl(), dbCredentials.getUsername(), dbCredentials.getPassword());
-            dbConnector.connect();
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        restAPI.get("/users", UserController.getAllUsers);
+        restAPI.start(restAPIPort);
     }
 }

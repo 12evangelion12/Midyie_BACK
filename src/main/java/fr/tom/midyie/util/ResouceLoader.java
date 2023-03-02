@@ -3,13 +3,13 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 01/03/2023 21:28
+ * @LastEdit 02/03/2023 18:51
  */
 
-package fr.tom.midyie.utils;
+package fr.tom.midyie.util;
 
 import fr.tom.midyie.Main;
-import fr.tom.midyie.exceptions.ResourceLoaderException;
+import fr.tom.midyie.exception.ResourceLoaderException;
 
 import java.io.InputStream;
 

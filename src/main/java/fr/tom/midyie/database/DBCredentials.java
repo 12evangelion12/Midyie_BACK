@@ -3,18 +3,22 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 01/03/2023 21:23
+ * @LastEdit 02/03/2023 18:51
  */
 
 package fr.tom.midyie.database;
 
-import fr.tom.midyie.exceptions.DatabaseCredentialsException;
-import fr.tom.midyie.exceptions.ResourceLoaderException;
-import fr.tom.midyie.utils.ResouceLoader;
+import fr.tom.midyie.common.Constants;
+import fr.tom.midyie.exception.DatabaseCredentialsException;
+import fr.tom.midyie.exception.ResourceLoaderException;
+import fr.tom.midyie.util.ResouceLoader;
 
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Classe de gestion des paramètres d'accès à la base de donnée
+ */
 public class DBCredentials {
 
     private final String url;
@@ -26,7 +30,7 @@ public class DBCredentials {
         Properties properties = new Properties();
         ResouceLoader resouceLoader = new ResouceLoader();
         try {
-            InputStream inputStream = resouceLoader.load("database.properties");
+            InputStream inputStream = resouceLoader.load(Constants.DATABASE_PROPERTIES_FILE);
             properties.load(inputStream);
 
         } catch (ResourceLoaderException e) {
@@ -36,9 +40,9 @@ public class DBCredentials {
         }
 
 
-        url = properties.getProperty("database.url");
-        username = properties.getProperty("database.username");
-        password = properties.getProperty("database.password");
+        url = properties.getProperty(Constants.DATABASE_URL_PROPERTY);
+        username = properties.getProperty(Constants.DATABASE_USERNAME_PROPERTY);
+        password = properties.getProperty(Constants.DATABASE_PASSWORD_PROPERTY);
     }
 
     public String getUrl() {
