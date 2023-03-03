@@ -31,6 +31,7 @@ public class PropertyDao {
     private static final String INSERT_QUERY = "INSERT INTO properties (isBreakable, isFlammable, isStackable) VALUES (?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE properties SET isBreakable=?, isFlammable=?, isStackable=? WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM properties WHERE id=?";
+    private static final String SELECT_ALL_ROW_QUERY = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'properties' AND COLUMN_NAME <> 'id'";
 
     public Property getPropertyById(int id) {
         Property property = null;
@@ -91,5 +92,26 @@ public class PropertyDao {
         } catch (SQLException | DatabaseCredentialsException e) {
             Main.getLogger(getClass()).error("Impossible de supprimer la propriété d'item avec l'id \"" + id + "\" de la base de donnée", e);
         }
+    }
+
+    public boolean verifyPropertyExist(String property) {
+
+        boolean propertyExist = false;
+
+        try (Connection conn = new DBConnector().connect();
+             PreparedStatement statement = conn.prepareStatement(SELECT_ALL_ROW_QUERY)) {
+
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    if (rs.getString("COLUMN_NAME").equalsIgnoreCase(property)) {
+                        propertyExist = true;
+                    }
+                }
+            }
+        } catch (SQLException | DatabaseCredentialsException e) {
+            Main.getLogger(getClass()).error("Impossible de vérifier si la propriété \""+property+"\" existe dans la base de donnée !", e);
+        }
+
+        return propertyExist;
     }
 }

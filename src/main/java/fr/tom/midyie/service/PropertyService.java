@@ -34,4 +34,6 @@ public class PropertyService {
     public void deleteProperty(int id) {
         propertyDao.deleteProperty(id);
     }
+
+    public boolean verifyPropertyExist(String property) { return propertyDao.verifyPropertyExist(property); }
 }
