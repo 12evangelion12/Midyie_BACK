@@ -34,7 +34,7 @@ public class PropertyController {
         ctx.json(property);
     }
 
-    // Handler pour créer une propriété
+    // Handler pour créer une propriété 
     public void createAccount(Context ctx) {
         Property property = ctx.bodyAsClass(Property.class);
         propertyService.createProperty(property);

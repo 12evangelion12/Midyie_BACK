@@ -102,7 +102,8 @@ public class PropertyDao {
              PreparedStatement statement = conn.prepareStatement(SELECT_ALL_ROW_QUERY)) {
 
             try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
+                    System.out.println(rs.getString("COLUMN_NAME"));
                     if (rs.getString("COLUMN_NAME").equalsIgnoreCase(property)) {
                         propertyExist = true;
                     }

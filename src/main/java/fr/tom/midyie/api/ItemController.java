@@ -34,7 +34,8 @@ public class ItemController {
         List<Item> items = itemService.getItemsByProperty(property, state);
 
         if (items == null) {
-
+            context.json("La propriété \""+property+"\" n'existe pas !").status(404);
+            return;
         }
 
         context.json(items);
