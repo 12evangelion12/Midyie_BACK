@@ -78,7 +78,7 @@ public class ItemDao {
             System.out.println(statement);
 
             try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     Item item = new Item();
                     item.setId(rs.getInt(ID_FIELD));
                     item.setName(rs.getString(NAME_FIELD));

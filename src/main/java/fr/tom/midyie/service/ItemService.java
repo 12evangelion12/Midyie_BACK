@@ -16,9 +16,11 @@ import java.util.List;
 public class ItemService {
 
     private final ItemDao itemDao;
+    private final PropertyService propertyService;
 
     public ItemService() {
         itemDao = new ItemDao();
+        propertyService = new PropertyService();
     }
 
     public List<Item> getAllItems() {
@@ -26,6 +28,10 @@ public class ItemService {
     }
 
     public List<Item> getItemsByProperty(String property, boolean state) {
+
+        if (!propertyService.verifyPropertyExist(property)) {
+            return null;
+        }
         return itemDao.getItemsByProperty(property, state);
     }
 

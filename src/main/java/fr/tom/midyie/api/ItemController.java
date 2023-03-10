@@ -34,6 +34,12 @@ public class ItemController {
         String property = context.queryParam("property");
         boolean state = Boolean.parseBoolean(context.queryParam("state"));
         List<Item> items = itemService.getItemsByProperty(property, state);
+
+        if (items == null) {
+            context.json("La propriété \""+property+"\" n'existe pas !").status(404);
+            return;
+        }
+
         context.json(items);
     }
 
