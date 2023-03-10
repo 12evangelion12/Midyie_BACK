@@ -3,7 +3,7 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 03/03/2023 00:02
+ * @LastEdit 10/03/2023 01:55
  */
 
 package fr.tom.midyie.service;
@@ -33,8 +33,8 @@ public class ItemService {
         return itemDao.getItemById(id);
     }
 
-    public void createItem(Item item) {
-        itemDao.createItem(item);
+    public boolean createItem(Item item) {
+        return itemDao.createItem(item);
     }
 
     public void updateItem(Item item) {

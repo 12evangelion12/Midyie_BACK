@@ -3,15 +3,18 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 02/03/2023 22:03
+ * @LastEdit 10/03/2023 02:31
  */
 
 package fr.tom.midyie.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.tom.midyie.model.Account;
 import fr.tom.midyie.service.AccountService;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -60,5 +63,21 @@ public class AccountController {
         String accountId = context.pathParam("id");
         accountService.deleteAccount(Integer.parseInt(accountId));
         context.status(204); // No Content
+    }
+
+    public void verifyAccount(Context context) {
+        Account account = context.bodyAsClass(Account.class);
+        ObjectNode jsonNode = new ObjectMapper().createObjectNode();
+
+        JSONObject result = accountService.authenticate(account.getUsername(), account.getPassword());
+
+        if (!result.getBoolean("authenticated")) {
+            jsonNode.put("message", "Login failed");
+            context.status(403).json(jsonNode);
+        } else {
+            jsonNode.put("message", "Login Successful");
+            jsonNode.put("account_type", result.getString("account_type"));
+            context.status(200).json(jsonNode);
+        }
     }
 }

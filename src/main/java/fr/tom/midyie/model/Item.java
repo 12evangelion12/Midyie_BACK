@@ -3,7 +3,7 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 02/03/2023 22:10
+ * @LastEdit 09/03/2023 23:23
  */
 
 package fr.tom.midyie.model;
@@ -14,6 +14,7 @@ public class Item {
     private int id;
     private String name;
     private String minecraftId;
+    private String image;
 
     public Property getProperty() {
         return property;
@@ -45,5 +46,13 @@ public class Item {
 
     public void setMinecraftId(String minecraftId) {
         this.minecraftId = minecraftId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

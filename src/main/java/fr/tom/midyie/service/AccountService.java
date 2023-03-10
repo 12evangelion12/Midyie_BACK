@@ -3,7 +3,7 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 02/03/2023 20:45
+ * @LastEdit 05/03/2023 23:45
  */
 
 package fr.tom.midyie.service;
@@ -13,6 +13,7 @@ import fr.tom.midyie.dao.AccountDao;
 import fr.tom.midyie.exception.EncryptorException;
 import fr.tom.midyie.model.Account;
 import fr.tom.midyie.util.Encryptor;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -47,5 +48,13 @@ public class AccountService {
 
     public void deleteAccount(int id) {
         accountDao.deleteAccount(id);
+    }
+
+    public JSONObject authenticate(String accountIdentifiant, String accountPassword) {
+        try {
+            return accountDao.authenticate(accountIdentifiant, Encryptor.encrypt(accountPassword));
+        } catch (EncryptorException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

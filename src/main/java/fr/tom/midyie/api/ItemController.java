@@ -3,11 +3,13 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 03/03/2023 00:42
+ * @LastEdit 10/03/2023 02:01
  */
 
 package fr.tom.midyie.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.tom.midyie.model.Item;
 import fr.tom.midyie.service.ItemService;
 import io.javalin.http.Context;
@@ -46,8 +48,12 @@ public class ItemController {
 
     public void createItem(Context context) {
         Item item = context.bodyAsClass(Item.class);
-        itemService.createItem(item);
-        context.status(201); // Created
+        boolean itemAdded = itemService.createItem(item);
+
+        ObjectNode jsonNode = new ObjectMapper().createObjectNode();
+        jsonNode.put("itemAdded", itemAdded);
+
+        context.status(201).json(jsonNode); // Created
     }
 
     public void updateItem(Context context) {

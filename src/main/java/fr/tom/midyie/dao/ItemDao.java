@@ -3,7 +3,7 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 03/03/2023 00:36
+ * @LastEdit 10/03/2023 02:37
  */
 
 package fr.tom.midyie.dao;
@@ -25,10 +25,13 @@ public class ItemDao {
     private static final String ID_FIELD = "id";
     private static final String NAME_FIELD = "name";
     private static final String MINECRAFT_ID_FIELD = "minecraft_id";
+
+    private static final String MINECRAFT_IMAGE_FIELD = "image";
     private static final String PROPERTIES_FIELD = "properties";
-    private static final String SELECT_ALL_QUERY = "SELECT id,name,minecraft_id,properties FROM item";
+    private static final String SELECT_ALL_QUERY = "SELECT id,name,minecraft_id,image,properties FROM item";
     private static final String SELECT_BY_ID_QUERY = "SELECT id,name,minecraft_id,properties FROM item WHERE id=?";
-    private static final String INSERT_QUERY = "INSERT INTO item (id, name, minecraft_id, properties) VALUES (?, ?, ?)";
+    private static final String INSERT_QUERY = "INSERT INTO item (name, minecraft_id, image, properties) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_QUERY_WITHOUT_PROPERTY = "INSERT INTO item (name, minecraft_id, image) VALUES (?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE item SET name=?, minecraft_id=?, properties=? WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM item WHERE id=?";
 
@@ -51,6 +54,7 @@ public class ItemDao {
                 item.setId(rs.getInt(ID_FIELD));
                 item.setName(rs.getString(NAME_FIELD));
                 item.setMinecraftId(rs.getString(MINECRAFT_ID_FIELD));
+                item.setImage(rs.getString(MINECRAFT_IMAGE_FIELD));
                 item.setProperty(propertyDao.getPropertyById(rs.getInt(PROPERTIES_FIELD)));
                 items.add(item);
             }
@@ -79,6 +83,7 @@ public class ItemDao {
                     item.setId(rs.getInt(ID_FIELD));
                     item.setName(rs.getString(NAME_FIELD));
                     item.setMinecraftId(rs.getString(MINECRAFT_ID_FIELD));
+                    item.setImage(rs.getString(MINECRAFT_IMAGE_FIELD));
                     item.setProperty(propertyDao.getPropertyById(rs.getInt(PROPERTIES_FIELD)));
                     items.add(item);
                 }
@@ -104,6 +109,7 @@ public class ItemDao {
                     item = new Item();
                     item.setId(rs.getInt(ID_FIELD));
                     item.setName(rs.getString(NAME_FIELD));
+                    item.setImage(rs.getString(MINECRAFT_IMAGE_FIELD));
                     item.setMinecraftId(rs.getString(MINECRAFT_ID_FIELD));
                     item.setProperty(propertyDao.getPropertyById(rs.getInt(PROPERTIES_FIELD)));
                 }
@@ -115,17 +121,36 @@ public class ItemDao {
         return item;
     }
 
-    public void createItem(Item item) {
-        try (Connection conn = new DBConnector().connect();
-             PreparedStatement statement = conn.prepareStatement(INSERT_QUERY)) {
+    public boolean createItem(Item item) {
 
-            statement.setString(1, item.getName());
-            statement.setString(2, item.getMinecraftId());
-            statement.setInt(3, item.getProperty().getId());
-            propertyDao.addProperty(item.getProperty());
-            statement.executeUpdate();
-        } catch (SQLException | DatabaseCredentialsException e) {
-            Main.getLogger(getClass()).error("Impossible d'ajouter le compte " + item + " à la base de donnée", e);
+        if (item.getProperty() == null) {
+            try (Connection conn = new DBConnector().connect();
+                 PreparedStatement statement = conn.prepareStatement(INSERT_QUERY_WITHOUT_PROPERTY)) {
+
+                statement.setString(1, item.getName());
+                statement.setString(2, item.getMinecraftId());
+                statement.setString(3, item.getImage());
+                int changed = statement.executeUpdate();
+                return changed > 0;
+            } catch (SQLException | DatabaseCredentialsException e) {
+                Main.getLogger(getClass()).error("Impossible d'ajouter le compte " + item + " à la base de donnée", e);
+                return false;
+            }
+        } else {
+            try (Connection conn = new DBConnector().connect();
+                 PreparedStatement statement = conn.prepareStatement(INSERT_QUERY)) {
+
+                statement.setString(1, item.getName());
+                statement.setString(2, item.getMinecraftId());
+                statement.setString(3, item.getImage());
+                statement.setInt(4, item.getProperty().getId());
+                propertyDao.addProperty(item.getProperty());
+                int changed = statement.executeUpdate();
+                return changed > 0;
+            } catch (SQLException | DatabaseCredentialsException e) {
+                Main.getLogger(getClass()).error("Impossible d'ajouter le compte " + item + " à la base de donnée", e);
+                return false;
+            }
         }
     }
 

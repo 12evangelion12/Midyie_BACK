@@ -3,13 +3,14 @@
  * All rights reserved
  *
  * @Author RICHE Tom
- * @LastEdit 03/03/2023 00:41
+ * @LastEdit 09/03/2023 23:48
  */
 
 package fr.tom.midyie;
 
 import fr.tom.midyie.api.AccountController;
 import fr.tom.midyie.api.ItemController;
+import fr.tom.midyie.api.MinecraftNameController;
 import fr.tom.midyie.api.PropertyController;
 import fr.tom.midyie.common.Constants;
 import fr.tom.midyie.util.PropertiesManager;
@@ -37,8 +38,8 @@ public class RestAPIInitializer {
 
         AccountController accountController = new AccountController();
         restAPI.get("/accounts", accountController::getAllAccounts);
-        restAPI.get("/account/{accountId}", accountController::getAccountById);
-        restAPI.post("/account", accountController::createProperty);
+        restAPI.get("/account/", accountController::getAccountById);
+        restAPI.post("/account", accountController::verifyAccount);
         restAPI.put("/account/{accountId}", accountController::updateProperty);
         restAPI.delete("/account/{accountId}", accountController::deleteProperty);
 
@@ -56,7 +57,8 @@ public class RestAPIInitializer {
         restAPI.put("/property/{propertyId}", propertyController::updateAccount);
         restAPI.delete("/property/{propertyId}", propertyController::deleteProperty);
 
-
+        MinecraftNameController minecraftNameController = new MinecraftNameController();
+        restAPI.get("/pseudoAvailable", minecraftNameController::checkIfNameIsAvailable);
     }
 
     /**
